@@ -1,36 +1,21 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "ecommerce";
+$dsn = 'mysql:host=localhost;dbname=ecommerce;charset=utf8mb4;port=3306';
+$db_user = 'root';
+$db_pass = '';
 
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+try {
+  $db = new PDO($dsn, $db_user, $db_pass);
+  $sql = 'SELECT * FROM usuarios WHERE username LIKE :userLogin';
+  $query = $db->prepare($sql);
+  $query->bindParam('userLogin', $_POST['username']);
+  $query->execute();
+  $result = $query->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  echo $e->getMessage();
 }
-$userLogin = $_POST['username'];
-$sql = "SELECT * FROM usuarios WHERE username LIKE '%{$userLogin}%'";
-$result = mysqli_query($conn, $sql);
-$userInfo = array();
-
-while($row = mysqli_fetch_assoc($result)) {
-        $userInfo[] = $row;
-}
-$final = array();
-foreach ($userInfo as $key1 => $value1) {
-  if (is_array($value1)) {
-    $final = $value1;
-  }
-}
-
-$_SESSION = $final;
-
+$_SESSION = $result[0];
 $validError = validarLogin($_POST);
-
-mysqli_close($conn);
-
+$db = NULL;
 if (count($validError)>0) {
   foreach ($validError as $key => $value) {
     echo "$value";
