@@ -7,7 +7,7 @@
      ?>
   <section>
     <article class="main_products">
-      <img src="img/RazerBanner.jpg" alt="">
+      <img class="feactured-p" src="img/RazerBanner.jpg" alt="">
     </article>
     <article class="sub_products">
       <?php foreach ($listado as $key => $value): ?>
