@@ -13,11 +13,14 @@ $password = $passhash;
 try {
   $db = new PDO($dsn, $db_user, $db_pass);
   $query = $db->prepare('INSERT INTO usuarios (username, email, password) VALUES (:username, :email, :password)');
-  $query->bindParam(':username', $username);
-  $query->bindParam(':email', $email);
-  $query->bindParam(':password', $password);
-  $query->execute();
+  $query->beginTransaction();
+  $query->bindValue(':username', $username);
+  $query->bindValue(':email', $email);
+  $query->bindValue(':password', $password);
+  $query->exec();
+  $query->commit();
 } catch (PDOException $e) {
+  $query->rollBack();
   echo $e->getMessage();
 }
 

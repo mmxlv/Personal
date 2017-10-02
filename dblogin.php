@@ -7,10 +7,13 @@ try {
   $db = new PDO($dsn, $db_user, $db_pass);
   $sql = 'SELECT * FROM usuarios WHERE username LIKE :userLogin';
   $query = $db->prepare($sql);
-  $query->bindParam('userLogin', $_POST['username']);
-  $query->execute();
+  $query->beginTransaction();
+  $query->bindValue('userLogin', $_POST['username']);
+  $query->exec();
+  $query->commit();
   $result = $query->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
+  $query->rollBack();
   echo $e->getMessage();
 }
 $_SESSION = $result[0];
