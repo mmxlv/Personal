@@ -32,7 +32,7 @@
               </form>
             <?php else: ?>
               <a href="home.php?login">Login</a>
-              <span>Or</span>
+              <span class="span-sep">Or</span>
               <a href="home.php?register">Register</a>
             <?php endif; ?>
           </ul>
