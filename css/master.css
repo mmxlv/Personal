@@ -5,8 +5,8 @@
 body{
   background-image: url(../img/back_main.png);
 }
-.logo img{
-  width: 100%;
+.logo{
+  text-align: center;
 }
 .head_container{
   width: 100%;

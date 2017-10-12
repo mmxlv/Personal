@@ -18,7 +18,7 @@
   </head>
     <body>
       <div class="logo">
-        <a href="home.php"><img src="img/main_logo.png" alt=""></a>
+        <a href="home.php"><img src="img/black_logo.png" alt=""></a>
       </div>
       <div class="head_container">
         <div class="links">

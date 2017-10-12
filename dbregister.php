@@ -10,17 +10,19 @@ $username = $_REQUEST['userName'];
 $email = $_REQUEST['email'];
 $password = $passhash;
 
+$db = new PDO($dsn, $db_user, $db_pass);
+
 try {
-  $db = new PDO($dsn, $db_user, $db_pass);
+  $db->beginTransaction();
   $query = $db->prepare('INSERT INTO usuarios (username, email, password) VALUES (:username, :email, :password)');
-  $query->beginTransaction();
   $query->bindValue(':username', $username);
   $query->bindValue(':email', $email);
   $query->bindValue(':password', $password);
-  $query->exec();
-  $query->commit();
+  $query->execute();
+  $db->commit();
+  header("location:home.php");
 } catch (PDOException $e) {
-  $query->rollBack();
+  $db->rollBack();
   echo $e->getMessage();
 }
 

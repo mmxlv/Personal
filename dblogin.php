@@ -3,19 +3,20 @@ $dsn = 'mysql:host=localhost;dbname=ecommerce;charset=utf8mb4;port=3306';
 $db_user = 'root';
 $db_pass = '';
 
+$db = new PDO($dsn, $db_user, $db_pass);
+
 try {
-  $db = new PDO($dsn, $db_user, $db_pass);
-  $sql = 'SELECT * FROM usuarios WHERE username LIKE :userLogin';
-  $query = $db->prepare($sql);
-  $query->beginTransaction();
-  $query->bindValue('userLogin', $_POST['username']);
-  $query->exec();
-  $query->commit();
+  $db->beginTransaction();
+  $query = $db->prepare('SELECT * FROM usuarios WHERE username LIKE :userLogin');
+  $query->bindValue(':userLogin', $_POST['username']);
+  $query->execute();
+  $db->commit();
   $result = $query->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-  $query->rollBack();
+  $db->rollBack();
   echo $e->getMessage();
 }
+
 $_SESSION = $result[0];
 $validError = validarLogin($_POST);
 $db = NULL;
