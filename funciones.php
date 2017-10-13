@@ -35,5 +35,35 @@ function loginUser($datos){
   $_SESSION['logged'] = $datos['id'];
 }
 
+function validarExistencia($datos){
+  $dsn = 'mysql:host=localhost;dbname=ecommerce;charset=utf8mb4;port=3306';
+  $db_user = 'root';
+  $db_pass = '';
+  $db = new PDO($dsn, $db_user, $db_pass);
+
+  try {
+    $db->beginTransaction();
+    $sql = 'SELECT username, email FROM usuarios WHERE username LIKE :username OR email LIKE :email';
+    $query = $db->prepare($sql);
+    $query->bindValue(':username', $datos['userName']);
+    $query->bindValue(':email', $datos['email']);
+    $query->execute();
+    $db->commit();
+    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $e) {
+      $db->rollBack();
+      return $e->getMessage();
+  }
+
+  $db = NULL;
+  $user = $result[0];
+  if (count($user) == 0) {
+    return true;
+  }else {
+    return false;
+  }
+}
+
+
 
 ?>
