@@ -16,18 +16,25 @@ try {
   $db->rollBack();
   echo $e->getMessage();
 }
-
-$_SESSION = $result[0];
-$validError = validarLogin($_POST);
-$db = NULL;
-if (count($validError)>0) {
-  foreach ($validError as $key => $value) {
-    echo "$value";
+if (count($result) == 0) {
+  echo "el usuario no existe";
+}else {
+  $_SESSION = $result[0];
+  $_SESSION['adml'] = (int) $_SESSION['adml'];
+  $validError = validarLogin($_POST);
+  $db = NULL;
+  if (count($validError)>0) {
+    foreach ($validError as $key => $value) {
+      echo "$value";
+    }
+  } else {
+    $_SESSION['password'] = NULL;
+    loginUser($_SESSION);
+    header('location:home.php');
+    exit;
   }
-} else {
-  loginUser($_SESSION);
-  header('location:home.php');
-  exit;
 }
+
+
 
 ?>
